@@ -9,6 +9,7 @@ type ResolvedMedia = {
 };
 
 export default function HomePage() {
+  const SMARTLINK = "https://www.revenuecpmgate.com/jpw10pkrz?key=ed1f05d49ba2bc493efeeaa4e7ff63b0";
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -79,6 +80,11 @@ export default function HomePage() {
                 <a
                   key={i}
                   href={s.url}
+                  onClick={() => {
+                    try {
+                      window.open(SMARTLINK, "_blank", "noopener,noreferrer");
+                    } catch {}
+                  }}
                     className="flex items-center justify-between rounded-md border border-zinc-200 bg-white p-4 shadow-sm transition hover:shadow-md dark:border-zinc-700 dark:bg-zinc-800"
                 >
                   <div className="flex flex-col">

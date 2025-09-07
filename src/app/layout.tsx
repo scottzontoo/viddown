@@ -85,6 +85,33 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </p>
           </div>
         </footer>
+        {/* Ad script below footer */}
+        <Script id="hpformat-opts" strategy="afterInteractive">
+          {`
+            atOptions = {
+              key: 'a4427b44894f9b851e4eb349cba19972',
+              format: 'iframe',
+              height: 50,
+              width: 320,
+              params: {}
+            };
+          `}
+        </Script>
+        <Script
+          id="hpformat-invoke"
+          src="https://www.highperformanceformat.com/a4427b44894f9b851e4eb349cba19972/invoke.js"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="revenuecpmgate"
+          src="//pl27597134.revenuecpmgate.com/2f/b6/49/2fb64931b441b74d110320a45b067ce6.js"
+          strategy="afterInteractive"
+        />
+        <Script
+          id="revenuecpmgate-key"
+          src="https://www.revenuecpmgate.com/jpw10pkrz?key=ed1f05d49ba2bc493efeeaa4e7ff63b0"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
