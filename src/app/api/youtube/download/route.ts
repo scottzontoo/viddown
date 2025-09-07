@@ -47,6 +47,10 @@ export async function GET(req: NextRequest) {
 
     return new Response(webStream, { headers });
   } catch (err: any) {
-    return new Response(JSON.stringify({ error: err?.message || "Download failed" }), { status: 500, headers: { "content-type": "application/json" } });
+    const errorMessage = err?.message || "Download failed";
+    if (errorMessage.includes("Sign in") || errorMessage.includes("bot")) {
+      return new Response(JSON.stringify({ error: "We are currently sorry, Youdube download is currenlty under mentanace, Try again later, Tiktok and X Download are Good" }), { status: 503, headers: { "content-type": "application/json" } });
+    }
+    return new Response(JSON.stringify({ error: errorMessage }), { status: 500, headers: { "content-type": "application/json" } });
   }
 }

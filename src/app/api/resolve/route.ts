@@ -81,6 +81,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(data);
   } catch (err: any) {
     const msg = typeof err?.message === "string" ? err.message : "Failed to resolve";
+    if (msg.includes("Sign in") || msg.includes("bot")) {
+      return NextResponse.json({ error: "We are currently sorry, Youdube download is currenlty under mentanace, Try again later, Tiktok and X Download are Good" }, { status: 503 });
+    }
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
