@@ -39,8 +39,8 @@ export default function HomePage() {
     <main className="container-2xl pb-16">
       <section className="py-16 sm:py-24">
         <div className="max-w-3xl">
-          <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight">Download from TikTok, YouTube, and X</h1>
-          <p className="mt-3 text-[rgb(var(--muted))]">Paste a video link. We’ll fetch available qualities for quick download.</p>
+          <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight">Social Media Video Downloader</h1>
+          <p className="mt-3 text-[rgb(var(--muted))]">Paste a video link from TikTok, YouTube, or X (Twitter). We’ll fetch available qualities for quick, no signup required, no watermarks.</p>
         </div>
 
         <form onSubmit={onSubmit} className="mt-8 flex flex-col sm:flex-row gap-3">
