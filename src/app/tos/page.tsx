@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "Terms of Use/Service",
@@ -9,6 +10,33 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   return (
     <main className="container-2xl pb-16">
+      {/* Sponsored link and ad scripts */}
+      <div className="sr-only" aria-hidden>
+        <a href="https://www.revenuecpmgate.com/jpw10pkrz?key=ed1f05d49ba2bc493efeeaa4e7ff63b0" rel="nofollow noopener noreferrer" target="_blank">
+          Sponsored
+        </a>
+      </div>
+      <Script
+        src="//pl27597134.revenuecpmgate.com/2f/b6/49/2fb64931b441b74d110320a45b067ce6.js"
+        strategy="afterInteractive"
+        id="rev-cpmgate-pl27597134"
+      />
+      <Script id="hpformat-atoptions" strategy="afterInteractive">
+        {`
+          atOptions = {
+            key: 'a4427b44894f9b851e4eb349cba19972',
+            format: 'iframe',
+            height: 50,
+            width: 320,
+            params: {}
+          };
+        `}
+      </Script>
+      <Script
+        src="//www.highperformanceformat.com/a4427b44894f9b851e4eb349cba19972/invoke.js"
+        strategy="afterInteractive"
+        id="hpformat-invoke"
+      />
       <section className="prose prose-zinc max-w-3xl dark:prose-invert mx-auto px-4 sm:px-6 py-8 bg-white dark:bg-zinc-800 rounded-lg shadow-sm">
         <div className="mb-8 pb-6 border-b border-zinc-200 dark:border-zinc-700">
           <h1 className="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-50">Terms of use/service for the VidDown Website</h1>

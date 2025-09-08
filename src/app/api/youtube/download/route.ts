@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
   } catch (err: any) {
     const errorMessage = err?.message || "Download failed";
     if (errorMessage.includes("Sign in") || errorMessage.includes("bot")) {
-      return new Response(JSON.stringify({ error: "We are currently sorry, Youdube download is currenlty under mentanace, Try again later, Tiktok and X Download are Good" }), { status: 503, headers: { "content-type": "application/json" } });
+      return new Response(JSON.stringify({ error: "We are currently sorry, YouTube downloader is currently under maintenance, Try again later, TikTok and X Download are Good" }), { status: 503, headers: { "content-type": "application/json" } });
     }
     return new Response(JSON.stringify({ error: errorMessage }), { status: 500, headers: { "content-type": "application/json" } });
   }
