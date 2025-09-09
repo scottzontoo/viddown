@@ -26,4 +26,4 @@ Open http://localhost:3000 and paste a video URL to test.
 
 ## Legal
 
-Use only for lawful, personal use. Respect each platform’s Terms of Service. This tool does not circumvent DRM...
+Use only for lawful, personal use. Respect each platform’s Terms of Service. This tool does not circumvent DRM.
