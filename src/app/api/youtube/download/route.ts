@@ -47,6 +47,23 @@ export async function GET(req: NextRequest) {
 
     return new Response(webStream, { headers });
   } catch (err: any) {
+    // Try fallback to external API
+    try {
+      const fallbackUrl = `https://api.massdatagh.com/api/youtube/download?url=${encodeURIComponent(url)}&itag=${itag}&title=${encodeURIComponent(titleParam)}`;
+      const fallbackResponse = await fetch(fallbackUrl);
+      
+      if (fallbackResponse.ok) {
+        const headers: Record<string, string> = {
+          "content-type": fallbackResponse.headers.get("content-type") || "application/octet-stream",
+          "content-disposition": fallbackResponse.headers.get("content-disposition") || `attachment; filename="${titleParam}.mp4"`,
+        };
+        
+        return new Response(fallbackResponse.body, { headers });
+      }
+    } catch (fallbackError) {
+      // Fallback failed, continue with original error
+    }
+    
     const errorMessage = err?.message || "Download failed";
     if (errorMessage.includes("Sign in") || errorMessage.includes("bot")) {
       return new Response(JSON.stringify({ error: "We are currently sorry, YouTube downloader is currently under maintenance, Try again later, TikTok and X Download are Good" }), { status: 503, headers: { "content-type": "application/json" } });

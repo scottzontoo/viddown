@@ -4,7 +4,7 @@ import Script from "next/script";
 export const metadata: Metadata = {
   title: "Terms of Use/Service",
   description: "Terms of use/service for the VidDown website. Please read carefully before using our website.",
-  alternates: { canonical: "https://viddown.massdatagh.com/tos" },
+  alternates: { canonical: "https://api.massdatagh.com/tos" },
 };
 
 export default function TermsPage() {

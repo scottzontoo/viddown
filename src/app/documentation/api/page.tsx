@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function ApiDocumentationPage() {
   const [testUrl, setTestUrl] = useState("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-  const baseUrl = "https://viddown.massdatagh.com";
+  const baseUrl = "https://api.massdatagh.com";
 
   return (
     <main className="container-2xl py-16 px-4 max-w-6xl mx-auto">
@@ -72,7 +72,7 @@ export default function ApiDocumentationPage() {
         <h2 className="text-2xl font-semibold mb-4">Base URL</h2>
         <p className="mb-4">All API requests should be made to:</p>
         <pre className="bg-zinc-200 p-4 rounded dark:bg-zinc-700 overflow-x-auto">
-{`${baseUrl}/api/v1`}
+{`${baseUrl}/api`}
         </pre>
       </section>
 
@@ -82,7 +82,31 @@ export default function ApiDocumentationPage() {
         <div className="bg-zinc-100 p-6 rounded-lg mb-8 dark:bg-zinc-800">
           <div className="flex items-center mb-2">
             <span className="bg-green-500 text-white px-2 py-1 rounded text-sm mr-2">GET</span>
-            <code className="text-lg">/api/v1/resolve</code>
+            <code className="text-lg">/</code>
+          </div>
+          <p className="mb-4">Service root - returns API information in JSON format.</p>
+        </div>
+
+        <div className="bg-zinc-100 p-6 rounded-lg mb-8 dark:bg-zinc-800">
+          <div className="flex items-center mb-2">
+            <span className="bg-green-500 text-white px-2 py-1 rounded text-sm mr-2">GET</span>
+            <code className="text-lg">/documentation/api</code>
+          </div>
+          <p className="mb-4">HTML documentation for the API.</p>
+        </div>
+
+        <div className="bg-zinc-100 p-6 rounded-lg mb-8 dark:bg-zinc-800">
+          <div className="flex items-center mb-2">
+            <span className="bg-green-500 text-white px-2 py-1 rounded text-sm mr-2">GET</span>
+            <code className="text-lg">/api/map</code>
+          </div>
+          <p className="mb-4">Machine-readable endpoint list.</p>
+        </div>
+        
+        <div className="bg-zinc-100 p-6 rounded-lg mb-8 dark:bg-zinc-800">
+          <div className="flex items-center mb-2">
+            <span className="bg-green-500 text-white px-2 py-1 rounded text-sm mr-2">GET</span>
+            <code className="text-lg">/api/resolve</code>
           </div>
           <p className="mb-4">Resolves a video URL and returns information about the video.</p>
           
@@ -101,15 +125,14 @@ export default function ApiDocumentationPage() {
     {
       "quality": "1080p",
       "type": "video/mp4",
-      "url": "/api/v1/download?url=https://example.com"
+      "url": "/api/download?url=https://example.com"
     },
     {
       "quality": "720p",
       "type": "video/mp4",
-      "url": "/api/v1/download?url=https://example.com"
+      "url": "/api/download?url=https://example.com"
     }
-  ],
-  "directDownloadUrl": "/api/v1/download?url=https://example.com"
+  ]
 }`}
           </pre>
         </div>
@@ -117,7 +140,7 @@ export default function ApiDocumentationPage() {
         <div className="bg-zinc-100 p-6 rounded-lg dark:bg-zinc-800">
           <div className="flex items-center mb-2">
             <span className="bg-green-500 text-white px-2 py-1 rounded text-sm mr-2">GET</span>
-            <code className="text-lg">/api/v1/download</code>
+            <code className="text-lg">/api/download</code>
           </div>
           <p className="mb-4">Downloads a video directly from the source platform.</p>
           
@@ -139,12 +162,12 @@ export default function ApiDocumentationPage() {
             <h3 className="text-xl font-medium mb-2">Direct Download</h3>
             <p className="mb-4">For a simple download, just use the download endpoint with the video URL:</p>
             <pre className="bg-zinc-200 p-4 rounded mb-6 dark:bg-zinc-700 overflow-x-auto">
-{`GET ${baseUrl}/api/v1/download?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ`}
+{`GET ${baseUrl}/api/download?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ`}
             </pre>
             
             <h4 className="text-lg font-medium mb-2">Using cURL</h4>
             <pre className="bg-zinc-200 p-4 rounded mb-6 dark:bg-zinc-700 overflow-x-auto">
-{`curl -L "${baseUrl}/api/v1/download?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ" -o video.mp4`}
+{`curl -L "${baseUrl}/api/download?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ" -o video.mp4`}
             </pre>
           </div>
           
@@ -153,10 +176,10 @@ export default function ApiDocumentationPage() {
             <p className="mb-4">To get information about the video before downloading:</p>
             <pre className="bg-zinc-200 p-4 rounded mb-6 dark:bg-zinc-700 overflow-x-auto">
 {`// Step 1: Resolve the video to get information
-GET ${baseUrl}/api/v1/resolve?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ
+GET ${baseUrl}/api/resolve?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ
 
 // Step 2: Use the directDownloadUrl from the response
-GET ${baseUrl}/api/v1/download?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ`}
+GET ${baseUrl}/api/download?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ`}
             </pre>
             
             <h4 className="text-lg font-medium mb-2">Using JavaScript Fetch</h4>
@@ -164,7 +187,7 @@ GET ${baseUrl}/api/v1/download?url=https://www.youtube.com/watch?v=dQw4w9WgXcQ`}
 {`// Step 1: Get video info
 const videoUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 const response = await fetch(
-  \`${baseUrl}/api/v1/resolve?url=\${encodeURIComponent(videoUrl)}\`
+  \`${baseUrl}/api/resolve?url=\${encodeURIComponent(videoUrl)}\`
 );
 const data = await response.json();
 
@@ -187,7 +210,7 @@ window.location.href = data.directDownloadUrl;`}
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <a
-              href={`/api/v1/resolve?url=${encodeURIComponent(testUrl)}`}
+              href={`/api/resolve?url=${encodeURIComponent(testUrl)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center rounded-md bg-zinc-600 px-5 py-3 font-medium text-white shadow-sm transition hover:bg-zinc-500"
@@ -195,7 +218,7 @@ window.location.href = data.directDownloadUrl;`}
               Test Resolve API
             </a>
             <a
-              href={`/api/v1/download?url=${encodeURIComponent(testUrl)}`}
+              href={`/api/download?url=${encodeURIComponent(testUrl)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center rounded-md bg-indigo-600 px-5 py-3 font-medium text-white shadow-sm transition hover:bg-indigo-500"

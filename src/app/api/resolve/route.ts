@@ -26,7 +26,7 @@ const adapters = {
     const sources = info.sources.map((s) => ({
       quality: s.quality ?? (s.type?.includes("m3u8") ? "HLS" : "MP4"),
       type: s.type ?? (s.url.endsWith(".m3u8") ? "application/vnd.apple.mpegurl" : "video/mp4"),
-      url: `/api/tiktok/download?url=${encodeURIComponent(s.url)}&title=${encodeURIComponent(info.title ?? "tiktok")}`,
+      url: `/api/download?url=${encodeURIComponent(url)}`,
     }));
   return {
       title: info.title,
@@ -36,27 +36,53 @@ const adapters = {
     };
   },
   youtube: async (url: string): Promise<Resolved> => {
-    const info = await getYouTubeInfo(url);
-    const best1080 = selectBestMp4(info.formats, 1080);
-    const best720 = selectBestMp4(info.formats, 720);
-    const audio = selectBestAudio(info.formats);
-    const sources = [] as Source[];
-    if (audio) sources.push({ quality: "Audio", type: audio.mimeType, url: `/api/youtube/download?url=${encodeURIComponent(url)}&itag=${audio.itag}&title=${encodeURIComponent(info.title)}` });
-    if (best1080) sources.push({ quality: best1080.qualityLabel ?? "1080p", type: best1080.mimeType, url: `/api/youtube/download?url=${encodeURIComponent(url)}&itag=${best1080.itag}&title=${encodeURIComponent(info.title)}` });
-    if (best720 && best720.itag !== best1080?.itag) sources.push({ quality: best720.qualityLabel ?? "720p", type: best720.mimeType, url: `/api/youtube/download?url=${encodeURIComponent(url)}&itag=${best720.itag}&title=${encodeURIComponent(info.title)}` });
-    return {
-      title: info.title,
-      provider: "YouTube",
-      thumbnails: info.thumbnails,
-      sources,
-    };
+    try {
+      const info = await getYouTubeInfo(url);
+      const best1080 = selectBestMp4(info.formats, 1080);
+      const best720 = selectBestMp4(info.formats, 720);
+      const audio = selectBestAudio(info.formats);
+      const sources = [] as Source[];
+      if (audio) sources.push({ quality: "Audio", type: audio.mimeType, url: `/api/download?url=${encodeURIComponent(url)}` });
+      if (best1080) sources.push({ quality: best1080.qualityLabel ?? "1080p", type: best1080.mimeType, url: `/api/download?url=${encodeURIComponent(url)}` });
+      if (best720 && best720.itag !== best1080?.itag) sources.push({ quality: best720.qualityLabel ?? "720p", type: best720.mimeType, url: `/api/download?url=${encodeURIComponent(url)}` });
+      return {
+        title: info.title,
+        provider: "YouTube",
+        thumbnails: info.thumbnails,
+        sources,
+      };
+    } catch (error: any) {
+      // Try fallback to external API for resolve
+      try {
+        const fallbackUrl = `https://api.massdatagh.com/api/resolve?url=${encodeURIComponent(url)}`;
+        const fallbackResponse = await fetch(fallbackUrl);
+        
+        if (fallbackResponse.ok) {
+          const fallbackData = await fallbackResponse.json();
+          return {
+            title: fallbackData.title,
+            provider: "YouTube",
+            thumbnails: fallbackData.thumbnails,
+            sources: fallbackData.sources?.map((s: any) => ({
+              quality: s.quality,
+              type: s.type,
+              url: `/api/download?url=${encodeURIComponent(url)}`
+            })) || [],
+          };
+        }
+      } catch (fallbackError) {
+        // Fallback failed, rethrow original error
+      }
+      
+      throw error;
+    }
   },
   x: async (url: string): Promise<Resolved> => {
     const info = await getXInfo(url);
   const sources = info.sources.map((s) => ({
       quality: s.quality ?? "MP4",
       type: s.type ?? "video/mp4",
-      url: `/api/x/download?url=${encodeURIComponent(s.url)}&title=${encodeURIComponent(info.title ?? "x-video")}`,
+      url: `/api/download?url=${encodeURIComponent(url)}`,
     }));
   if (!sources.length) return { title: info.title, provider: "X", thumbnails: [], sources: [] };
     return {

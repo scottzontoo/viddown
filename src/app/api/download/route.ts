@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { detectProvider } from "../utils";
+import { detectProvider } from "../v1/utils";
 import { getYouTubeInfo, selectBestMp4, selectBestAudio } from "@/lib/youtube";
 import { getXInfo } from "@/lib/x";
 import { getTikTokInfo } from "@/lib/tiktok";
@@ -14,7 +14,7 @@ function sanitizeFilename(name: string) {
 
 /**
  * Unified download endpoint that handles all supported platforms
- * @route GET /api/v1/download
+ * @route GET /api/download
  */
 export async function GET(req: NextRequest) {
   try {
@@ -74,16 +74,16 @@ async function handleYouTubeDownload(url: string) {
   }
 
   const info = await getYouTubeInfo(url);
-  
+
   // Always select the best available quality
-  let format = selectBestMp4(info.formats, 1080) || 
-               selectBestMp4(info.formats, 720) || 
+  let format = selectBestMp4(info.formats, 1080) ||
+               selectBestMp4(info.formats, 720) ||
                info.formats.find(f => f.hasVideo);
 
   if (!format) {
     // If no video format is available, try to get audio
     format = selectBestAudio(info.formats);
-    
+
     if (!format) {
       return NextResponse.json(
         { error: "No downloadable formats available for this video" },
@@ -97,7 +97,7 @@ async function handleYouTubeDownload(url: string) {
   const ext = baseMime.includes("audio/")
     ? (baseMime.includes("webm") ? "webm" : baseMime.includes("mp4") ? "m4a" : "audio")
     : (baseMime.includes("webm") ? "webm" : "mp4");
-  
+
   const filename = sanitizeFilename(`${info.title}.${ext}`);
 
   try {
@@ -113,9 +113,9 @@ async function handleYouTubeDownload(url: string) {
   } catch (error: any) {
     // Try fallback to external API
     try {
-      const fallbackUrl = `https://api.massdatagh.com/api/v1/download?url=${encodeURIComponent(url)}`;
+      const fallbackUrl = `https://api.massdatagh.com/api/download?url=${encodeURIComponent(url)}`;
       const fallbackResponse = await fetch(fallbackUrl);
-      
+
       if (fallbackResponse.ok) {
         return new Response(fallbackResponse.body, {
           headers: {
@@ -127,7 +127,7 @@ async function handleYouTubeDownload(url: string) {
     } catch (fallbackError) {
       // Fallback failed, continue with original error
     }
-    
+
     return NextResponse.json(
       { error: error.message || "Failed to download YouTube video" },
       { status: 500 }
@@ -140,7 +140,7 @@ async function handleYouTubeDownload(url: string) {
  */
 async function handleTikTokDownload(url: string) {
   const info = await getTikTokInfo(url);
-  
+
   if (!info.sources || info.sources.length === 0) {
     return NextResponse.json(
       { error: "No downloadable sources found for this TikTok link. The post may be private or region-restricted." },
@@ -153,7 +153,7 @@ async function handleTikTokDownload(url: string) {
   if (!bestSource) {
     bestSource = info.sources[0]; // Take the first if no MP4 available
   }
-  
+
   const sourceUrl = bestSource.url;
   const title = info.title || "tiktok-video";
   const filename = sanitizeFilename(`${title}.mp4`);
@@ -183,7 +183,7 @@ async function handleTikTokDownload(url: string) {
  */
 async function handleXDownload(url: string) {
   const info = await getXInfo(url);
-  
+
   if (!info.sources || info.sources.length === 0) {
     return NextResponse.json(
       { error: "No downloadable sources found for this X (Twitter) link. The post may be private or has no video." },

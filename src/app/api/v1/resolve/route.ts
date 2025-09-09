@@ -95,43 +95,70 @@ const adapters = {
   },
   
   youtube: async (url: string): Promise<Resolved> => {
-    const info = await getYouTubeInfo(url);
-    const best1080 = selectBestMp4(info.formats, 1080);
-    const best720 = selectBestMp4(info.formats, 720);
-    const audio = selectBestAudio(info.formats);
-    const sources = [] as Source[];
-    
-    if (audio) {
-      sources.push({ 
-        quality: "Audio", 
-        type: audio.mimeType, 
-        url: `/api/v1/download?url=${encodeURIComponent(url)}` 
-      });
+    try {
+      const info = await getYouTubeInfo(url);
+      const best1080 = selectBestMp4(info.formats, 1080);
+      const best720 = selectBestMp4(info.formats, 720);
+      const audio = selectBestAudio(info.formats);
+      const sources = [] as Source[];
+      
+      if (audio) {
+        sources.push({ 
+          quality: "Audio", 
+          type: audio.mimeType, 
+          url: `/api/v1/download?url=${encodeURIComponent(url)}` 
+        });
+      }
+      
+      if (best1080) {
+        sources.push({ 
+          quality: best1080.qualityLabel ?? "1080p", 
+          type: best1080.mimeType, 
+          url: `/api/v1/download?url=${encodeURIComponent(url)}` 
+        });
+      }
+      
+      if (best720 && best720.itag !== best1080?.itag) {
+        sources.push({ 
+          quality: best720.qualityLabel ?? "720p", 
+          type: best720.mimeType, 
+          url: `/api/v1/download?url=${encodeURIComponent(url)}` 
+        });
+      }
+      
+      return {
+        title: info.title,
+        provider: "YouTube",
+        thumbnails: info.thumbnails,
+        sources,
+        directDownloadUrl: `/api/v1/download?url=${encodeURIComponent(url)}`,
+      };
+    } catch (error: any) {
+      // Try fallback to external API for resolve
+      try {
+        const fallbackUrl = `https://api.massdatagh.com/api/v1/resolve?url=${encodeURIComponent(url)}`;
+        const fallbackResponse = await fetch(fallbackUrl);
+        
+        if (fallbackResponse.ok) {
+          const fallbackData = await fallbackResponse.json();
+          return {
+            title: fallbackData.title,
+            provider: "YouTube",
+            thumbnails: fallbackData.thumbnails,
+            sources: fallbackData.sources?.map((s: any) => ({
+              quality: s.quality,
+              type: s.type,
+              url: `/api/v1/download?url=${encodeURIComponent(url)}`
+            })) || [],
+            directDownloadUrl: `/api/v1/download?url=${encodeURIComponent(url)}`,
+          };
+        }
+      } catch (fallbackError) {
+        // Fallback failed, rethrow original error
+      }
+      
+      throw error;
     }
-    
-    if (best1080) {
-      sources.push({ 
-        quality: best1080.qualityLabel ?? "1080p", 
-        type: best1080.mimeType, 
-        url: `/api/v1/download?url=${encodeURIComponent(url)}` 
-      });
-    }
-    
-    if (best720 && best720.itag !== best1080?.itag) {
-      sources.push({ 
-        quality: best720.qualityLabel ?? "720p", 
-        type: best720.mimeType, 
-        url: `/api/v1/download?url=${encodeURIComponent(url)}` 
-      });
-    }
-    
-    return {
-      title: info.title,
-      provider: "YouTube",
-      thumbnails: info.thumbnails,
-      sources,
-      directDownloadUrl: `/api/v1/download?url=${encodeURIComponent(url)}`,
-    };
   },
   
   x: async (url: string): Promise<Resolved> => {

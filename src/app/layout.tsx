@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     title: "VidDown • Social Media Video Downloader",
     description:
       "Download videos from TikTok, YouTube, and X (Twitter) quickly and for free. Paste a link, get multiple qualities.",
-  url: "https://vidown.massdatagh.com/",
+  url: "https://api.massdatagh.com/",
     siteName: "VidDown",
     type: "website",
   },
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
       "Free, fast downloader for TikTok, YouTube, and X (Twitter). Paste a link to get download options.",
   },
   alternates: {
-  canonical: "https://vidown.massdatagh.com/",
+  canonical: "https://api.massdatagh.com/",
   },
 };
 
@@ -81,7 +81,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </p>
             <p>
               VidDown is a fast, free online tool built by <a className="underline hover:text-indigo-600" href="https://massdatagh.com" target="_blank" rel="noreferrer">MassData</a> and NIJverse Team to help you save videos in MP4 from
-              your favorite social media platforms. No signup required, no watermarks. Visit <a className="underline hover:text-indigo-600" href="https://vidown.massdatagh.com" target="_blank" rel="noreferrer">vidown.massdatagh.com</a>.
+              your favorite social media platforms. No signup required, no watermarks. Visit <a className="underline hover:text-indigo-600" href="https://api.massdatagh.com" target="_blank" rel="noreferrer">api.massdatagh.com</a>.
             </p>
           </div>
         </footer>
